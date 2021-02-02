@@ -1,7 +1,7 @@
 package com.example.astroidradar.api
 
-import com.example.astroidradar.domain.Asteroid
 import com.example.astroidradar.Constants
+import com.example.astroidradar.domain.Asteroid
 import org.json.JSONObject
 import java.text.SimpleDateFormat
 import java.util.*
@@ -55,3 +55,4 @@ private fun getNextSevenDaysFormattedDates(): ArrayList<String> {
 
     return formattedDateList
 }
+
