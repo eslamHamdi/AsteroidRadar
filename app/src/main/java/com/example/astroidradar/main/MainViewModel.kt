@@ -1,4 +1,4 @@
-package com.udacity.asteroidradar.main
+package com.example.astroidradar.main
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel

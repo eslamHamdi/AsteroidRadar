@@ -1,5 +1,6 @@
 package com.example.astroidradar.api
 
+import com.example.astroidradar.Constants.BASE_URL
 import com.example.astroidradar.data_transfer_opjects.PictureOfDay
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -9,6 +10,7 @@ import okhttp3.Request
 import org.json.JSONObject
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
+import retrofit2.converter.scalars.ScalarsConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -26,6 +28,8 @@ interface NasaApiService
 private val moshi = Moshi.Builder()
         .add(KotlinJsonAdapterFactory())
         .build()
+
+private val scalars = ScalarsConverterFactory.create()
 
 private val interceptor = Interceptor { chain ->
     var request: Request = chain.request()
@@ -49,8 +53,9 @@ object Network {
                 .addInterceptor(interceptor)
                 .build()
     private val retrofit = Retrofit.Builder()
-            .baseUrl("https://api.nasa.gov/")
+            .baseUrl(BASE_URL)
             .client(client)
+            .addConverterFactory(scalars)
             .addConverterFactory(MoshiConverterFactory.create(moshi))
             .build()
 

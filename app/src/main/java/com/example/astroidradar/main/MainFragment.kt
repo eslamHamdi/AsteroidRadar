@@ -6,7 +6,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.astroidradar.R
 import com.example.astroidradar.databinding.FragmentMainBinding
-import com.udacity.asteroidradar.main.MainViewModel
 
 class MainFragment : Fragment() {
 

@@ -36,6 +36,6 @@ interface AsteroidDao
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun saveAsteroidsList(vararg asteroids: Entities)
 
-    @Query("SELECT * FROM Entities")
+    @Query("SELECT * FROM Entities ORDER BY id ASC")
     fun getAllList():LiveData<List<Entities>>
 }
