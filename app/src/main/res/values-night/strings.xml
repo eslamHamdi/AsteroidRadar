@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="textSize">24sp</dimen>
+    <string name="asteroid_status">Asteroid Status</string>
 </resources>

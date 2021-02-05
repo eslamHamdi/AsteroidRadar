@@ -1,6 +1,4 @@
 package com.example.astroidradar.detail
-
-
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View

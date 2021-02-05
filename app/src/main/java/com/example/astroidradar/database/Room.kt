@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.room.*
 
+
 @Database(entities = [Entities::class] ,version = 1,exportSchema = false)
 abstract class AsteroidData: RoomDatabase()
 {
@@ -11,17 +12,23 @@ abstract class AsteroidData: RoomDatabase()
 
     companion object
     {
-        @Volatile
-        private var database:AsteroidData? = null
+
+        private lateinit var INSTANCE:AsteroidData
+
 
         fun getInstance(context:Context):AsteroidData
         {
-            if (database != null)
+            kotlin.synchronized(AsteroidData::class.java)
             {
-                database = Room.databaseBuilder(context,AsteroidData::class.java,"Data").build()
+                if (!::INSTANCE.isInitialized)
+                {
+                    INSTANCE = Room.databaseBuilder(context.applicationContext,AsteroidData::class.java,"Data").build()
+
+                }
+
             }
 
-            return database!!
+            return INSTANCE
 
 
         }

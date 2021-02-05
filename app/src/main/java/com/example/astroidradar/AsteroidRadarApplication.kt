@@ -38,7 +38,7 @@ class AsteroidRadarApplication: Application()
 
 private val request = PeriodicWorkRequestBuilder<RefreshDataWork>(1,TimeUnit.DAYS)
         .setConstraints(constraints)
-        .setBackoffCriteria(BackoffPolicy.LINEAR,1,TimeUnit.HOURS)
+        //.setBackoffCriteria(BackoffPolicy.LINEAR,1,TimeUnit.HOURS)
         .build()
 
 
