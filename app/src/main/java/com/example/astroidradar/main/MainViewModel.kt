@@ -1,8 +1,10 @@
 package com.example.astroidradar.main
 
-import androidx.lifecycle.*
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import com.example.astroidradar.AsteroidRadarApplication
-import com.example.astroidradar.data_transfer_opjects.PictureOfDay
 import com.example.astroidradar.database.AsteroidData
 import com.example.astroidradar.repository.AsteroidRepository
 import kotlinx.coroutines.Dispatchers
@@ -16,14 +18,11 @@ class MainViewModel(application: AsteroidRadarApplication) : AndroidViewModel(ap
 
     val Repo :AsteroidRepository = AsteroidRepository(Data)
 
-     private val _pic : MutableLiveData<PictureOfDay?>?=null
-
-    val pic:LiveData<PictureOfDay?>?
-    get() = _pic
 
    // var pic :PictureOfDay?  =null
 
     val feedLiveData = Repo.asteroids
+    val image = Repo.pic
 
 
 
@@ -45,15 +44,8 @@ class MainViewModel(application: AsteroidRadarApplication) : AndroidViewModel(ap
         {
 
             Repo.RefreshData()
-           val img = Repo.imageOfDay()
-            withContext(Dispatchers.Main)
-            {
-                if (img!=null)
-                {
-                    _pic?.value=img
-                }
+            Repo.imageOfDay()
 
-            }
         }
 
 

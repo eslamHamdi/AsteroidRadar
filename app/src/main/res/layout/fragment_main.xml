@@ -32,7 +32,7 @@
                 android:scaleType="centerCrop"
                 app:srcCompat="@drawable/placeholder_picture_of_day"
                 android:contentDescription="@string/image_of_the_day"
-                app:showImage ="@{viewModel.pic.url}"/>
+                app:showImage ="@{viewModel.image.url}"/>
 
             <TextView
                 android:id="@+id/textView"

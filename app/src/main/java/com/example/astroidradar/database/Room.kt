@@ -5,7 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.room.*
 
 
-@Database(entities = [Entities::class] ,version = 1,exportSchema = false)
+@Database(entities = [Entities::class] ,version = 3,exportSchema = false)
 abstract class AsteroidData: RoomDatabase()
 {
     abstract val dao:AsteroidDao
@@ -22,7 +22,9 @@ abstract class AsteroidData: RoomDatabase()
             {
                 if (!::INSTANCE.isInitialized)
                 {
-                    INSTANCE = Room.databaseBuilder(context.applicationContext,AsteroidData::class.java,"Data").build()
+                    INSTANCE = Room.databaseBuilder(context.applicationContext,AsteroidData::class.java,"Data")
+                        .fallbackToDestructiveMigration()
+                        .build()
 
                 }
 
@@ -43,6 +45,6 @@ interface AsteroidDao
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun saveAsteroidsList(vararg asteroids: Entities)
 
-    @Query("SELECT * FROM Entities ORDER BY id ASC")
+    @Query("SELECT * FROM Entities ORDER BY closeApproachDate ASC")
     fun getAllList():LiveData<List<Entities>>
 }

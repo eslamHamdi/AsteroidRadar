@@ -2,6 +2,7 @@ package com.example.astroidradar.repository
 
 import android.util.Log
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import com.example.astroidradar.api.Network
 import com.example.astroidradar.api.parseAsteroidsJsonResult
@@ -10,6 +11,8 @@ import com.example.astroidradar.database.AsteroidData
 import com.example.astroidradar.database.toDomainModel
 import com.example.astroidradar.domain.Asteroid
 import com.example.astroidradar.domain.toDataBase
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import java.text.SimpleDateFormat
 import java.util.*
@@ -24,6 +27,11 @@ class AsteroidRepository(val Data: AsteroidData)
     val asteroids:LiveData<List<Asteroid>>
     get() = _asteroids
 
+    private val _pic:MutableLiveData<PictureOfDay?> = MutableLiveData(null)
+
+    val pic:LiveData<PictureOfDay?>
+    get() = _pic
+
 
     suspend fun RefreshData()
     {
@@ -31,7 +39,7 @@ class AsteroidRepository(val Data: AsteroidData)
         try
         {
             val Response =  Network.NasaService.getNeoFeed(getCurrentDate())
-            val jsonObject = JSONObject(Response.toString())
+            val jsonObject = JSONObject(Response.string())
             val asteroids = parseAsteroidsJsonResult(jsonObject)
             Data.dao.saveAsteroidsList(*asteroids.toDataBase())
         }
@@ -48,7 +56,7 @@ class AsteroidRepository(val Data: AsteroidData)
         val c: Date = Calendar.getInstance().time
         println("Current time => $c")
 
-        val df = SimpleDateFormat("yyyy-MM-DD", Locale.getDefault())
+        val df = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
         return df.format(c)
     }
 
@@ -61,17 +69,24 @@ class AsteroidRepository(val Data: AsteroidData)
         return s.format(Date(cal.timeInMillis))
     }
 
-    suspend fun imageOfDay():PictureOfDay?
+    suspend fun imageOfDay()
     {
         val image = Network.NasaService.getPictureOfDay()
         if(image.mediaType=="image")
         {
             Log.e(null, "imageOfDay: gotimg")
-            return image
+           withContext(Dispatchers.Main)
+           {
+               _pic.value = image
+           }
         }
         else
         {
-            return null
+            withContext(Dispatchers.Main)
+            {
+                _pic.value = null
+            }
+        }
 
 
         }
@@ -79,4 +94,3 @@ class AsteroidRepository(val Data: AsteroidData)
 
     }
 
-}
