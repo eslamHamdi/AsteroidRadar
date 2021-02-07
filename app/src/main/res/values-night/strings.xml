@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="asteroid_status">Asteroid Status</string>
+    <string name="delete_list">deleteList</string>
 </resources>

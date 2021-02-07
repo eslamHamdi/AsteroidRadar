@@ -1,10 +1,12 @@
 package com.example.astroidradar.main
 
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.astroidradar.AsteroidRadarApplication
+import com.example.astroidradar.Constants
 import com.example.astroidradar.R
 import com.example.astroidradar.adapters.AsteroidListAdapter
 import com.example.astroidradar.databinding.FragmentMainBinding
@@ -24,11 +26,6 @@ class MainFragment : Fragment() {
 
         binding.viewModel = viewModel
         val adapter = AsteroidListAdapter()
-
-        viewModel.feedLiveData.observe(this.viewLifecycleOwner){
-            adapter.submitList(it)
-        }
-
         binding.asteroidRecycler.adapter = adapter
 
 
@@ -45,6 +42,25 @@ class MainFragment : Fragment() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return true
+        var listType:String? = null
+
+            when(item.itemId )
+            {
+
+                R.id.show_all_menu->listType = Constants.All
+                R.id.show_day_menu-> listType = Constants.DAY
+                R.id.show_week_menu -> listType = Constants.WEEK
+                else -> viewModel.deleteAll()
+            }
+
+        Log.e(null, "onOptionsItemSelected: entered ", )
+        listType.let {
+            if (it != null) {
+                viewModel.getData(it)
+            }
+        }
+
+        return super.onOptionsItemSelected(item)
+
     }
 }
