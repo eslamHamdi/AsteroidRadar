@@ -3,6 +3,7 @@ package com.example.astroidradar.database
 import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.room.*
+import kotlinx.coroutines.flow.Flow
 
 
 @Database(entities = [Entities::class], version = 3, exportSchema = false)
@@ -47,7 +48,7 @@ interface AsteroidDao
     suspend fun saveAsteroidsList(vararg asteroids: Entities)
 
     @Query("SELECT * FROM Entities ORDER BY closeApproachDate ASC")
-    fun getAllList():LiveData<List<Entities>>
+    fun getAllList():Flow<List<Entities>>
 
     @Query("DELETE FROM Entities")
     suspend fun deleteAll(): Int

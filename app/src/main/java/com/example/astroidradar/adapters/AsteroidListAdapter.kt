@@ -15,25 +15,28 @@ class AsteroidListAdapter:ListAdapter<Asteroid,AsteroidListAdapter.AsteroidViewH
 
 
 
-    class AsteroidViewHolder(val binding:AsteroidItemBinding):RecyclerView.ViewHolder(binding.root)
+   inner class AsteroidViewHolder(val binding:AsteroidItemBinding):RecyclerView.ViewHolder(binding.root)
     {
         fun onBind(asteroid:Asteroid)
         {
             binding.asteroid = asteroid
+            binding.itemContainer.setOnClickListener {
+                clicker?.onClick(asteroid)
+            }
             binding.executePendingBindings()
 
         }
 
-        companion object
-        {
-            fun getInstance(parent: ViewGroup):AsteroidViewHolder
-            {
-                val binding = DataBindingUtil.inflate<AsteroidItemBinding>(LayoutInflater
-                    .from(parent.context), R.layout.asteroid_item,parent,false)
-
-                return AsteroidViewHolder(binding)
-            }
-        }
+//        companion object
+//        {
+//            fun getInstance(parent: ViewGroup):AsteroidViewHolder
+//            {
+//                val binding = DataBindingUtil.inflate<AsteroidItemBinding>(LayoutInflater
+//                    .from(parent.context), R.layout.asteroid_item,parent,false)
+//
+//                return AsteroidViewHolder(binding)
+//            }
+//        }
     }
 
     companion object DiffCallBack:DiffUtil.ItemCallback<Asteroid>()
@@ -52,7 +55,10 @@ class AsteroidListAdapter:ListAdapter<Asteroid,AsteroidListAdapter.AsteroidViewH
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AsteroidViewHolder {
 
-        return AsteroidViewHolder.getInstance(parent)
+        val binding = DataBindingUtil.inflate<AsteroidItemBinding>(LayoutInflater
+            .from(parent.context), R.layout.asteroid_item,parent,false)
+
+        return AsteroidViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: AsteroidViewHolder, position: Int) {
@@ -60,5 +66,11 @@ class AsteroidListAdapter:ListAdapter<Asteroid,AsteroidListAdapter.AsteroidViewH
         holder.onBind(item)
 
 
+    }
+
+    var clicker:OnItemClick? = null
+    interface OnItemClick
+    {
+        fun onClick(item:Asteroid)
     }
 }

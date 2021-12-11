@@ -17,7 +17,7 @@ fun getEndDate():String
 {
     val cal = Calendar.getInstance()
     val s = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-    cal.add(Calendar.DAY_OF_YEAR, 6)
+    cal.add(Calendar.DAY_OF_YEAR, 7)
     Log.e(null, "getEndDate: ${s.format(Date(cal.timeInMillis))} ")
     return s.format(Date(cal.timeInMillis))
 }

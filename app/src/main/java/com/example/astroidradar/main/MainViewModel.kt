@@ -7,6 +7,7 @@ import com.example.astroidradar.database.AsteroidData
 import com.example.astroidradar.domain.Asteroid
 import com.example.astroidradar.repository.AsteroidRepository
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -19,7 +20,7 @@ class MainViewModel(application: AsteroidRadarApplication) : AndroidViewModel(ap
 
 
 
-    var viewData:MutableLiveData<List<Asteroid>>? = Repo.asteroids as MutableLiveData<List<Asteroid>>
+    var viewData:MutableLiveData<List<Asteroid>?>? = MutableLiveData<List<Asteroid>?>()
     val image = Repo.pic
 
     fun getData(type:String)
@@ -27,16 +28,18 @@ class MainViewModel(application: AsteroidRadarApplication) : AndroidViewModel(ap
 
             viewModelScope.launch {
                 when (type) {
-                    Constants.All -> {
-                        viewData?.postValue(Repo.asteroids.value)
-                    }
+                   Constants.All -> {
+                     Repo.getSavedList().collect {
+                         viewData?.value = it
+                     }
+                   }
                     Constants.DAY -> {
 
-                        viewData?.postValue(Repo.dailyFeed())
+                        viewData?.value =(Repo.dailyFeed())
                     }
 
                     Constants.WEEK -> {
-                        viewData?.postValue(Repo.weeklyFeed())
+                        viewData?.value =(Repo.weeklyFeed())
                     }
 
                 }
@@ -50,13 +53,14 @@ class MainViewModel(application: AsteroidRadarApplication) : AndroidViewModel(ap
 
 
 
+
+
     init
     {
 
         viewModelScope.launch{
 
             getFeed()
-
 
         }
 
@@ -66,12 +70,12 @@ class MainViewModel(application: AsteroidRadarApplication) : AndroidViewModel(ap
 
     suspend fun getFeed()
     {
-        withContext(Dispatchers.IO)
-        {
+
             //Repo.Data.dao.deleteAll()
             Repo.RefreshData()
             Repo.imageOfDay()
-
+        Repo.getSavedList().collect {
+            viewData?.value = it
         }
 
 
@@ -80,6 +84,7 @@ class MainViewModel(application: AsteroidRadarApplication) : AndroidViewModel(ap
     {
         viewModelScope.launch {
             Repo.Data.dao.deleteAll()
+            getFeed()
         }
     }
 
