@@ -1,9 +1,11 @@
 package com.example.astroidradar.main
 
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -13,6 +15,7 @@ import com.example.astroidradar.R
 import com.example.astroidradar.adapters.AsteroidListAdapter
 import com.example.astroidradar.databinding.FragmentMainBinding
 import com.example.astroidradar.domain.Asteroid
+import com.example.astroidradar.isNetworkConnected
 
 class MainFragment : Fragment(),AsteroidListAdapter.OnItemClick {
 
@@ -25,6 +28,7 @@ class MainFragment : Fragment(),AsteroidListAdapter.OnItemClick {
 
     val adapter = AsteroidListAdapter()
 
+    @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         val binding = FragmentMainBinding.inflate(inflater)
@@ -45,6 +49,13 @@ class MainFragment : Fragment(),AsteroidListAdapter.OnItemClick {
 
             val description = imageTitle
             Toast.makeText(this.requireContext(),description,Toast.LENGTH_LONG).show()
+        }
+
+        viewModel.viewData?.observe(viewLifecycleOwner){
+                if (it.isNullOrEmpty() && !isNetworkConnected(this.requireContext())) {
+                    Toast.makeText(this.requireContext(),"Please Connect To Internet",Toast.LENGTH_LONG).show()
+                }
+
         }
 
 
