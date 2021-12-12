@@ -6,7 +6,7 @@
     <data>
         <variable
             name="asteroid"
-            type="com.example.astroidradar.domain.Asteroid" />
+            type="com.eslam.astroidradar.domain.Asteroid" />
 
     </data>
 

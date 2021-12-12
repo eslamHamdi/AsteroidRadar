@@ -6,7 +6,7 @@
 
     <fragment
         android:id="@+id/mainFragment"
-        android:name="com.example.astroidradar.main.MainFragment"
+        android:name="com.eslam.astroidradar.main.MainFragment"
         android:label="fragment_main"
         tools:layout="@layout/fragment_main" >
         <action
@@ -16,13 +16,13 @@
 
     <fragment
         android:id="@+id/detailFragment"
-        android:name="com.example.astroidradar.detail.DetailFragment"
+        android:name="com.eslam.astroidradar.detail.DetailFragment"
         android:label="fragment_detail"
         tools:layout="@layout/fragment_detail">
 
         <argument
             android:name="selectedAsteroid"
-            app:argType="com.example.astroidradar.domain.Asteroid"/>
+            app:argType="com.eslam.astroidradar.domain.Asteroid"/>
     </fragment>
 
 </navigation>

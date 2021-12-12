@@ -6,7 +6,7 @@
     <data>
         <variable
             name="viewModel"
-            type="com.example.astroidradar.main.MainViewModel" />
+            type="com.eslam.astroidradar.main.MainViewModel" />
         <import type="android.view.View"/>
 
     </data>
