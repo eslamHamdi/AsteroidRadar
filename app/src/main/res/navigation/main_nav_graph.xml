@@ -12,6 +12,9 @@
         <action
             android:id="@+id/action_showDetail"
             app:destination="@id/detailFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_imageDetailsFragment"
+            app:destination="@id/imageDetailsFragment" />
     </fragment>
 
     <fragment
@@ -23,6 +26,15 @@
         <argument
             android:name="selectedAsteroid"
             app:argType="com.eslam.astroidradar.domain.Asteroid"/>
+    </fragment>
+    <fragment
+        android:id="@+id/imageDetailsFragment"
+        android:name="com.eslam.astroidradar.imagedetails.ImageDetailsFragment"
+        android:label="ImageDetailsFragment" >
+        <argument
+            android:name="pic_of_day"
+            app:argType="com.eslam.astroidradar.data_transfer_opjects.PictureOfDay"
+            app:nullable="true" />
     </fragment>
 
 </navigation>

@@ -2,4 +2,5 @@
 <resources>
     <string name="asteroid_status">Asteroid Status</string>
     <string name="delete_list">deleteList</string>
+    <string name="image_of_the_day_details">image of the day explanation</string>
 </resources>

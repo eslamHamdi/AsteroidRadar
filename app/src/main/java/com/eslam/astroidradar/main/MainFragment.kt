@@ -13,6 +13,7 @@ import com.eslam.astroidradar.AsteroidRadarApplication
 import com.eslam.astroidradar.Constants
 import com.eslam.astroidradar.R
 import com.eslam.astroidradar.adapters.AsteroidListAdapter
+import com.eslam.astroidradar.data_transfer_opjects.PictureOfDay
 import com.eslam.astroidradar.databinding.FragmentMainBinding
 import com.eslam.astroidradar.domain.Asteroid
 import com.eslam.astroidradar.isNetworkConnected
@@ -38,17 +39,19 @@ class MainFragment : Fragment(),AsteroidListAdapter.OnItemClick {
 
         adapter.clicker = this
         binding.asteroidRecycler.adapter = adapter
-        var imageTitle = ""
+        var image:PictureOfDay? = null
         viewModel.image.observe(viewLifecycleOwner){
             if (it != null) {
-                imageTitle = it.title!!
+                image = it
             }
         }
 
         binding.activityMainImageOfTheDay.setOnClickListener {
 
-            val description = imageTitle
-            Toast.makeText(this.requireContext(),description,Toast.LENGTH_LONG).show()
+           if (image != null)
+           {
+               findNavController().navigate(MainFragmentDirections.actionMainFragmentToImageDetailsFragment(image))
+           }
         }
 
         viewModel.viewData?.observe(viewLifecycleOwner){

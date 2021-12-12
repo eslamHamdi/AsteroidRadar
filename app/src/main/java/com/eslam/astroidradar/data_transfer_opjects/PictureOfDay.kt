@@ -1,7 +1,11 @@
 package com.eslam.astroidradar.data_transfer_opjects
 
+import android.os.Parcel
+import android.os.Parcelable
 import com.squareup.moshi.Json
+import kotlinx.parcelize.Parcelize
 
+@Parcelize
 data class PictureOfDay(
 
 	@Json(name="date")
@@ -27,4 +31,6 @@ data class PictureOfDay(
 
 	@Json(name="url")
 	val url: String? = null
-)
+) : Parcelable
+
+
