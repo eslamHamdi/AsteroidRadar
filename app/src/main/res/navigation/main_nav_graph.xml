@@ -7,8 +7,8 @@
     <fragment
         android:id="@+id/mainFragment"
         android:name="com.eslam.astroidradar.main.MainFragment"
-        android:label="fragment_main"
-        tools:layout="@layout/fragment_main" >
+        android:label="Asteroids"
+        tools:layout="@layout/fragment_main">
         <action
             android:id="@+id/action_showDetail"
             app:destination="@id/detailFragment" />
@@ -20,17 +20,17 @@
     <fragment
         android:id="@+id/detailFragment"
         android:name="com.eslam.astroidradar.detail.DetailFragment"
-        android:label="fragment_detail"
+        android:label="Asteroid Details"
         tools:layout="@layout/fragment_detail">
 
         <argument
             android:name="selectedAsteroid"
-            app:argType="com.eslam.astroidradar.domain.Asteroid"/>
+            app:argType="com.eslam.astroidradar.domain.Asteroid" />
     </fragment>
     <fragment
         android:id="@+id/imageDetailsFragment"
         android:name="com.eslam.astroidradar.imagedetails.ImageDetailsFragment"
-        android:label="ImageDetailsFragment" >
+        android:label="Image  Description">
         <argument
             android:name="pic_of_day"
             app:argType="com.eslam.astroidradar.data_transfer_opjects.PictureOfDay"

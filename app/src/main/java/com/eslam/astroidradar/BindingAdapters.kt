@@ -6,6 +6,7 @@ import android.widget.TextView
 import androidx.core.net.toUri
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.eslam.astroidradar.adapters.AsteroidListAdapter
 import com.eslam.astroidradar.domain.Asteroid
 import com.squareup.picasso.Picasso
@@ -50,12 +51,16 @@ fun showImage(image:ImageView,imgUrl:String?)
 {
     imgUrl?.let {
         val imgUri = it.toUri().buildUpon().scheme("https").build()
-        Picasso.with(image.context)
+        Glide.with(image.context)
                 .load(imgUri)
                 .placeholder(R.drawable.loading_animation)
                 .error(R.drawable.ic_baseline_broken_image_24)
                 .into(image)
+
+
     }
+
+
 }
 
 @BindingAdapter("goneIfNotNull")

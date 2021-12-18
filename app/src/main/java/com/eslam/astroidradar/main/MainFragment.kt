@@ -57,6 +57,11 @@ class MainFragment : Fragment(),AsteroidListAdapter.OnItemClick {
         viewModel.viewData?.observe(viewLifecycleOwner){
                 if (it.isNullOrEmpty() && !isNetworkConnected(this.requireContext())) {
                     Toast.makeText(this.requireContext(),"Please Connect To Internet",Toast.LENGTH_LONG).show()
+                }else if (it.isNullOrEmpty())
+                {
+                    binding.statusLoadingWheel.visibility = View.VISIBLE
+                }else{
+                    binding.statusLoadingWheel.visibility = View.GONE
                 }
 
         }
@@ -82,7 +87,14 @@ class MainFragment : Fragment(),AsteroidListAdapter.OnItemClick {
                 R.id.show_all_menu-> listType = Constants.All
                 R.id.show_day_menu-> listType = Constants.DAY
                 R.id.show_week_menu -> listType = Constants.WEEK
-                else -> viewModel.deleteAll()
+                else ->{
+                    try {
+                        viewModel.deleteAll()
+                    }catch(e:Exception)
+                    {
+                        Toast.makeText(this.requireContext(),e.message,Toast.LENGTH_LONG).show()
+                    }
+                }
             }
 
         Log.e(null, "onOptionsItemSelected: $listType ", )
@@ -100,3 +112,5 @@ class MainFragment : Fragment(),AsteroidListAdapter.OnItemClick {
         findNavController().navigate(MainFragmentDirections.actionShowDetail(item))
     }
 }
+
+//app:goneIfNotNull="@{viewModel.viewData}"

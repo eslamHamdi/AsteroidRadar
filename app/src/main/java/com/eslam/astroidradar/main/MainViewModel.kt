@@ -79,24 +79,39 @@ class MainViewModel(application: com.eslam.astroidradar.AsteroidRadarApplication
     suspend fun getFeed()
     {
 
-            //Repo.Data.dao.deleteAll()
-            Repo.RefreshData()
+            viewModelScope.launch {
+                Repo.RefreshData()
+                Repo.getSavedList().collect {
+                    viewData?.value = it
+
+                }
+            }
+
+        viewModelScope.launch {
             Repo.imageOfDay()
-        Repo.getSavedList().collect {
-            viewData?.value = it
         }
+
+
+
+
+
 
 
     }
     fun deleteAll()
     {
+
         viewModelScope.launch {
-            Repo.Data.dao.deleteAll()
+
             try {
+                Repo.Data.dao.deleteAll()
+                viewData?.value = null
                 getFeed()
             }catch (e:Exception)
             {
-                viewData?.value = null
+
+                Log.e(null, "deleteAll: ${e.message} ", )
+                //viewData?.value = null
             }
 
         }

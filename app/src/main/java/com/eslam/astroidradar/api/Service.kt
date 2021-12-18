@@ -12,6 +12,7 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Query
+import java.util.concurrent.TimeUnit
 
 
 interface NasaApiService
@@ -50,6 +51,9 @@ object Network {
    private val client =
         OkHttpClient.Builder()
                 .addInterceptor(interceptor)
+            .callTimeout(30L,TimeUnit.SECONDS)
+            .readTimeout(30L,TimeUnit.SECONDS)
+            .connectTimeout(30L,TimeUnit.SECONDS)
                 .build()
     private val retrofit = Retrofit.Builder()
             .baseUrl(BASE_URL)
