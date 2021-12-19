@@ -18,7 +18,7 @@ import java.util.concurrent.TimeUnit
 interface NasaApiService
 {
     @GET("neo/rest/v1/feed")
-   suspend fun getNeoFeed(@Query("start_date")Start:String) : ResponseBody
+   suspend fun getNeoFeed(@Query("start_date")Start:String,@Query("end_date") end:String) : ResponseBody?
 
 
    @GET("planetary/apod")

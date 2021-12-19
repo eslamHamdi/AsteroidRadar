@@ -19,24 +19,17 @@ class AsteroidListAdapter:ListAdapter<Asteroid,AsteroidListAdapter.AsteroidViewH
     {
         fun onBind(asteroid:Asteroid)
         {
-            binding.asteroid = asteroid
-            binding.itemContainer.setOnClickListener {
-                clicker?.onClick(asteroid)
-            }
-            binding.executePendingBindings()
+
+                binding.asteroid = asteroid
+                binding.itemContainer.setOnClickListener {
+                    clicker?.onClick(asteroid)
+                }
+                binding.executePendingBindings()
+
 
         }
 
-//        companion object
-//        {
-//            fun getInstance(parent: ViewGroup):AsteroidViewHolder
-//            {
-//                val binding = DataBindingUtil.inflate<AsteroidItemBinding>(LayoutInflater
-//                    .from(parent.context), R.layout.asteroid_item,parent,false)
-//
-//                return AsteroidViewHolder(binding)
-//            }
-//        }
+
     }
 
     companion object DiffCallBack:DiffUtil.ItemCallback<Asteroid>()

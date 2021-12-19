@@ -9,7 +9,6 @@ import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import com.eslam.astroidradar.AsteroidRadarApplication
 import com.eslam.astroidradar.Constants
 import com.eslam.astroidradar.R
 import com.eslam.astroidradar.adapters.AsteroidListAdapter
@@ -18,51 +17,67 @@ import com.eslam.astroidradar.databinding.FragmentMainBinding
 import com.eslam.astroidradar.domain.Asteroid
 import com.eslam.astroidradar.isNetworkConnected
 
-class MainFragment : Fragment(),AsteroidListAdapter.OnItemClick {
+class MainFragment : Fragment(), AsteroidListAdapter.OnItemClick {
 
     private val viewModel: MainViewModel by lazy {
         val activity = requireNotNull(this.activity)
-        ViewModelProvider(this,MainViewModel.Factory(activity.application as com.eslam.astroidradar.AsteroidRadarApplication)).get(MainViewModel::class.java)
+        ViewModelProvider(
+            this,
+            MainViewModel.Factory(activity.application as com.eslam.astroidradar.AsteroidRadarApplication)
+        ).get(MainViewModel::class.java)
 
     }
 
 
-    val adapter = AsteroidListAdapter()
-
     @RequiresApi(Build.VERSION_CODES.M)
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         val binding = FragmentMainBinding.inflate(inflater)
         binding.lifecycleOwner = this
 
         binding.viewModel = viewModel
-
+        val adapter = AsteroidListAdapter()
         adapter.clicker = this
+
         binding.asteroidRecycler.adapter = adapter
-        var image:PictureOfDay? = null
-        viewModel.image.observe(viewLifecycleOwner){
+
+        var image: PictureOfDay? = null
+        viewModel.image.observe(viewLifecycleOwner) {
             if (it != null) {
                 image = it
             }
+
         }
 
         binding.activityMainImageOfTheDay.setOnClickListener {
 
-           if (image != null)
-           {
-               findNavController().navigate(MainFragmentDirections.actionMainFragmentToImageDetailsFragment(image))
-           }
+            if (image != null) {
+                findNavController().navigate(
+                    MainFragmentDirections.actionMainFragmentToImageDetailsFragment(
+                        image
+                    )
+                )
+            } else {
+                Toast.makeText(this.requireContext(), "No Image Is Loaded", Toast.LENGTH_LONG)
+                    .show()
+            }
         }
 
-        viewModel.viewData?.observe(viewLifecycleOwner){
-                if (it.isNullOrEmpty() && !isNetworkConnected(this.requireContext())) {
-                    Toast.makeText(this.requireContext(),"Please Connect To Internet",Toast.LENGTH_LONG).show()
-                }else if (it.isNullOrEmpty())
-                {
-                    binding.statusLoadingWheel.visibility = View.VISIBLE
-                }else{
-                    binding.statusLoadingWheel.visibility = View.GONE
-                }
+        viewModel.viewData?.observe(viewLifecycleOwner) {
+            if (it.isNullOrEmpty() && !isNetworkConnected(this.requireContext())) {
+                Toast.makeText(
+                    this.requireContext(),
+                    "Please Connect To Internet And Refresh again.",
+                    Toast.LENGTH_LONG
+                ).show()
+            } else if (it.isNullOrEmpty()) {
+                binding.statusLoadingWheel.visibility = View.VISIBLE
+            } else {
+                adapter.submitList(it)
+                binding.statusLoadingWheel.visibility = View.GONE
+            }
 
         }
 
@@ -79,25 +94,24 @@ class MainFragment : Fragment(),AsteroidListAdapter.OnItemClick {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        var listType:String? = null
+        var listType: String? = null
 
-            when(item.itemId )
-            {
+        when (item.itemId) {
 
-                R.id.show_all_menu-> listType = Constants.All
-                R.id.show_day_menu-> listType = Constants.DAY
-                R.id.show_week_menu -> listType = Constants.WEEK
-                else ->{
-                    try {
-                        viewModel.deleteAll()
-                    }catch(e:Exception)
-                    {
-                        Toast.makeText(this.requireContext(),e.message,Toast.LENGTH_LONG).show()
-                    }
+            R.id.show_all_menu -> listType = Constants.All
+            R.id.show_day_menu -> listType = Constants.DAY
+            R.id.show_week_menu -> listType = Constants.WEEK
+            else -> {
+                try {
+                    viewModel.deleteAll()
+
+                } catch (e: Exception) {
+                    Toast.makeText(this.requireContext(), e.message, Toast.LENGTH_LONG).show()
                 }
             }
+        }
 
-        Log.e(null, "onOptionsItemSelected: $listType ", )
+        Log.e(null, "onOptionsItemSelected: $listType ")
         listType.let {
             if (it != null) {
                 viewModel.getData(it)

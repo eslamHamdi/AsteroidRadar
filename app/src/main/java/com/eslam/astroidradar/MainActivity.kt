@@ -4,14 +4,13 @@ import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 
 class MainActivity : AppCompatActivity() {
 
-    lateinit var navController:NavController
+    lateinit var navController: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,15 +30,12 @@ class MainActivity : AppCompatActivity() {
 
         if (item.itemId == android.R.id.home) {
 
-                onBackPressed()
-                return true
-            }
+            onBackPressed()
+            return true
+        }
 
         return super.onOptionsItemSelected(item)
     }
-
-
-
 
 
 }

@@ -7,99 +7,91 @@ import com.eslam.astroidradar.Constants
 import com.eslam.astroidradar.database.AsteroidData
 import com.eslam.astroidradar.domain.Asteroid
 import com.eslam.astroidradar.repository.AsteroidRepository
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
-class MainViewModel(application: com.eslam.astroidradar.AsteroidRadarApplication) : AndroidViewModel(application)
-{
+class MainViewModel(application: com.eslam.astroidradar.AsteroidRadarApplication) :
+    AndroidViewModel(application) {
 
-    private val Data =  AsteroidData.getInstance(application)
+    private val Data = AsteroidData.getInstance(application)
 
-   private val Repo :AsteroidRepository = AsteroidRepository(Data)
-
+    private val Repo: AsteroidRepository = AsteroidRepository(Data)
 
 
-    var viewData:MutableLiveData<List<Asteroid>?>? = MutableLiveData<List<Asteroid>?>()
+    var viewData: MutableLiveData<List<Asteroid>?>? = MutableLiveData<List<Asteroid>?>()
     val image = Repo.pic
 
-    fun getData(type:String)
-    {
+    fun getData(type: String) {
 
-            viewModelScope.launch {
-                when (type) {
-                   Constants.All -> {
-                     Repo.getSavedList().collect {
-                         viewData?.value = it
-                     }
-                   }
-                    Constants.DAY -> {
-
-                        viewData?.value =(Repo.dailyFeed())
+        viewModelScope.launch {
+            when (type) {
+                Constants.All -> {
+                    Repo.getSavedList().collect {
+                        viewData?.value = it
                     }
+                }
+                Constants.DAY -> {
 
-                    Constants.WEEK -> {
-                        viewData?.value =(Repo.weeklyFeed())
-                    }
+                    viewData?.value = (Repo.dailyFeed())
+                }
 
+                Constants.WEEK -> {
+                    viewData?.value = (Repo.weeklyFeed())
                 }
 
             }
+
+        }
 
 
     }
 
 
-
-
-
-
-
-    init
-    {
-
-        viewModelScope.launch{
-
+    init {
+        viewModelScope.launch {
+            Log.e(null, ": entered")
             try {
                 getFeed()
-            }catch (e:Exception)
-            {
-               // Log.e(null, ":fetching failed ", )
+            } catch (e: Exception) {
+                Log.e(null, ":fetching failed ")
+
+            }
+        }
+
+
+    }
+
+
+    suspend fun getFeed() {
+
+        try {
+            Repo.imageOfDay()
+            Repo.RefreshData()
+            Repo.getSavedList()
+                .catch {
+
+                }.collect {
+                    if (!it.isNullOrEmpty())
+                    {
+                        viewData?.value = it
+                    }
+
+
+                }
+
+        } catch (e: Exception) {
+            if (viewData?.value.isNullOrEmpty()) {
                 viewData?.value = null
             }
 
-
-        }
-
-    }
-
-
-
-    suspend fun getFeed()
-    {
-
-            viewModelScope.launch {
-                Repo.RefreshData()
-                Repo.getSavedList().collect {
-                    viewData?.value = it
-
-                }
-            }
-
-        viewModelScope.launch {
-            Repo.imageOfDay()
+            Log.e(null, "getFeed: ${e.message} ")
         }
 
 
-
-
-
-
-
     }
-    fun deleteAll()
-    {
+
+    fun deleteAll() {
 
         viewModelScope.launch {
 
@@ -107,16 +99,14 @@ class MainViewModel(application: com.eslam.astroidradar.AsteroidRadarApplication
                 Repo.Data.dao.deleteAll()
                 viewData?.value = null
                 getFeed()
-            }catch (e:Exception)
-            {
+            } catch (e: Exception) {
 
-                Log.e(null, "deleteAll: ${e.message} ", )
-                //viewData?.value = null
+                Log.e(null, "deleteAll: ${e.message} ")
+
             }
 
         }
     }
-
 
 
     class Factory(val app: AsteroidRadarApplication) : ViewModelProvider.Factory {

@@ -20,7 +20,7 @@
     <string name="this_is_nasa_s_picture_of_day_showing_nothing_yet">This is NASA\'s picture of day, showing nothing yet</string>
     <string name="nasa_picture_of_day_content_description_format">NASA\'s picture of day: %s</string>
     <string name="asteroid_status">Asteroid Status</string>
-    <string name="delete_list">ClearList</string>
+    <string name="delete_list">RefreshList</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="image_of_the_day_details">image of the day explanation</string>

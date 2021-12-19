@@ -15,6 +15,7 @@ import java.util.*
     println("Current time => $c")
 
     val df = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+    Log.e(null, "getCurrentDate: ${df.format(c)} ")
     return df.format(c)
 }
 

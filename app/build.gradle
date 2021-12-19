@@ -14,7 +14,7 @@ android {
         applicationId "com.eslam.astroidradar"
         minSdkVersion 21
         targetSdkVersion 31
-        versionCode 4
+        versionCode 6
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -30,9 +30,9 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-//    kotlinOptions {
-//        jvmTarget = '1.8'
-//    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
 
     // Enables data binding.
     buildFeatures {

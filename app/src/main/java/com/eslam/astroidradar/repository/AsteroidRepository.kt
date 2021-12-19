@@ -13,7 +13,11 @@ import com.eslam.astroidradar.domain.toDataBase
 import com.eslam.astroidradar.getCurrentDate
 import com.eslam.astroidradar.getEndDate
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.async
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
 
@@ -23,16 +27,9 @@ class AsteroidRepository(val Data: AsteroidData)
 
 
 
-//    private val _asteroids = Transformations.map(Data.dao.getAllList()) {
-//
-//        it.toDomainModel()
-//    }
 
 
-//    val asteroids: LiveData<List<Asteroid>>
-//        get() = _asteroids
-
-    private val _pic: MutableLiveData<PictureOfDay?> = MutableLiveData(null)
+    private val _pic: MutableLiveData<PictureOfDay?> = MutableLiveData()
 
     val pic: LiveData<PictureOfDay?>
         get() = _pic
@@ -49,10 +46,19 @@ class AsteroidRepository(val Data: AsteroidData)
 
             withContext(Dispatchers.IO)
             {
-                val Response = Network.NasaService.getNeoFeed(getCurrentDate())
-                val jsonObject = JSONObject(Response.string())
-                val asteroids = parseAsteroidsJsonResult(jsonObject)
-                Data.dao.saveAsteroidsList(*asteroids.toDataBase())
+                val Response = Network.NasaService.getNeoFeed(getCurrentDate(), getEndDate())
+
+                if (Response != null) {
+                    Log.e(null, "RefreshData: entered ", )
+                    val jsonObject = JSONObject(Response?.string())
+                    val asteroids = parseAsteroidsJsonResult(jsonObject)
+                    asteroids?.let {
+                        Data.dao.saveAsteroidsList(*it.toDataBase())
+                    }
+
+                }
+
+
             }
 
         } catch (e: Exception)
@@ -82,23 +88,32 @@ class AsteroidRepository(val Data: AsteroidData)
 
     suspend fun imageOfDay()
     {
-        val image = Network.NasaService.getPictureOfDay()
 
-        Log.e("image", "imageOfDay: $image ", )
-        if (image.mediaType == "image")
+        withContext(Dispatchers.IO)
         {
-            Log.e(null, "imageOfDay: gotimg")
-            withContext(Dispatchers.Main)
+            val image = async {Network.NasaService.getPictureOfDay()
+
+            }.await()
+
+            Log.e("image", "imageOfDay: $image ", )
+            if (image.mediaType == "image")
             {
-                _pic.value = image
-            }
-        } else
-        {
-            withContext(Dispatchers.Main)
+                Log.e(null, "imageOfDay: gotimg")
+                withContext(Dispatchers.Main)
+                {
+                    _pic.value = image
+                }
+            } else
             {
-                _pic.value = null
+                withContext(Dispatchers.Main)
+                {
+                    _pic.value = PictureOfDay()
+                }
             }
+
         }
+
+
 
 
     }
@@ -109,6 +124,7 @@ class AsteroidRepository(val Data: AsteroidData)
             Data.dao.getTodayFeed(getCurrentDate()).toDomainModel()
         }catch (e:Exception) {
             listOf()
+
         }
 
 
