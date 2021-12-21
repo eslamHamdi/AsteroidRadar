@@ -15,10 +15,9 @@ class AsteroidRadarApplication: Application()
     override fun onCreate()
     {
         super.onCreate()
-       GlobalScope.launch(Dispatchers.IO) {
            WorkManager.getInstance(applicationContext)
                    .enqueueUniquePeriodicWork(RefreshDataWork.Name,ExistingPeriodicWorkPolicy.KEEP,request)
-       }
+
 
     }
 
@@ -38,7 +37,7 @@ class AsteroidRadarApplication: Application()
 
 private val request = PeriodicWorkRequestBuilder<RefreshDataWork>(1,TimeUnit.DAYS)
         .setConstraints(constraints)
-        //.setBackoffCriteria(BackoffPolicy.LINEAR,1,TimeUnit.HOURS)
+        .setBackoffCriteria(BackoffPolicy.LINEAR,1,TimeUnit.HOURS)
         .build()
 
 
